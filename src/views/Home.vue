@@ -1,7 +1,5 @@
 <template>
   <StackLayout>
-    <Label text="Home" />
-
     <RadListView :items="items"
                  pullToRefresh="true"
                  @pullToRefreshInitiated="onPullToRefreshInitiated">
@@ -15,19 +13,25 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
+
 export default {
   name: 'Home',
-  data () {
-    return {
-      items: ['Apple', 'Orange', 'Tomato']
-    }
+  computed: {
+    ...mapState({
+      items: state => state.fruits.items,
+    })
   },
   methods: {
     onPullToRefreshInitiated ({ object }) {
       console.log('Pulling...')
-      this.items.push('Berry')
-      object.notifyPullToRefreshFinished()
-      object.refresh()
+      this
+        .$store
+        .dispatch('fruits/add', 'Berry')
+        .then(() => {
+          object.notifyPullToRefreshFinished()
+          object.refresh()
+        })
     },
   }
 }
