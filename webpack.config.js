@@ -91,8 +91,8 @@ const config = (platform, launchArgs) => {
 
     resolve: {
       modules: [
-        'node_modules/tns-core-modules',
-        'node_modules',
+        path.resolve(__dirname, 'node_modules/tns-core-modules'),
+        path.resolve(__dirname, 'node_modules')
       ],
       extensions: [
         `.${platform}.css`,
@@ -106,20 +106,21 @@ const config = (platform, launchArgs) => {
       ],
     },
 
-    externals: (context, request, callback) => {
-      NativeScriptVueExternals(context, request, (err, importType) => {
-
-        if (isImportOf(context, request, ['vuex'])) {
-          return callback();
-        }
-
-        if(importType && importType.startsWith('commonjs')) {
-          return callback(err, importType)
-        }
-
-        require('webpack-node-externals')()(context, request, callback)
-      })
-    },
+    // Not using NativeScriptVueExternals
+    //externals: (context, request, callback) => {
+    //  NativeScriptVueExternals(context, request, (err, importType) => {
+    //
+    //    if (isImportOf(context, request, ['vuex'])) {
+    //      return callback();
+    //    }
+    //
+    //    if(importType && importType.startsWith('commonjs')) {
+    //      return callback(err, importType)
+    //    }
+    //
+    //    require('webpack-node-externals')()(context, request, callback)
+    //  })
+    //},
 
     plugins: [
 
