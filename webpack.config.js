@@ -11,6 +11,16 @@ const NativeScriptVueTarget = require('nativescript-vue-target');
 // Prepare NativeScript application from template (if necessary)
 require('./prepare')();
 
+// Auxiliar function for check if request is importing some of the passed pkgs
+const isImportOf = (context, request, packages) => {
+  for (let p of packages) {
+    if (request.indexOf(p) !== -1) {
+      return true
+    }
+  }
+  return false
+}
+
 // Generate platform-specific webpack configuration
 const config = (platform, launchArgs) => {
 
@@ -96,7 +106,20 @@ const config = (platform, launchArgs) => {
       ],
     },
 
-    externals: NativeScriptVueExternals,
+    externals: (context, request, callback) => {
+      NativeScriptVueExternals(context, request, (err, importType) => {
+
+        if (isImportOf(context, request, ['vuex'])) {
+          return callback();
+        }
+
+        if(importType && importType.startsWith('commonjs')) {
+          return callback(err, importType)
+        }
+
+        require('webpack-node-externals')()(context, request, callback)
+      })
+    },
 
     plugins: [
 

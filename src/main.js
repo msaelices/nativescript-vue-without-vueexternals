@@ -44,8 +44,9 @@ new Vue({
   </Frame>
   `,
 
-  created () {
-/*    if (isAndroid) {
+  mounted () {
+    if (isAndroid) {
+      console.log('Registering events...')
       const eventTypes = [
         app.AndroidApplication.activityCreatedEvent,
         app.AndroidApplication.activityDestroyedEvent,
@@ -60,10 +61,8 @@ new Vue({
       for (let i = 0; i < eventTypes.length; i++) {
         app.android.on(eventTypes[i], event => {
           console.log(`Event: ${event.eventName}, Activity: ${event.activity}`)
-          this.androidEvents.push(event)
         })
       }
     }
-    */
   },
 }).$start()
